@@ -1,0 +1,104 @@
+data_opt:
+    source: synthrad23_task1_pelvis
+    pixdim: [1, 1, 2.5]
+    preprocessing_config:
+        mr:
+            processing_type: minmax
+            params: {minv: 0, maxv: 1}
+        ct:
+            processing_type: scale_intensity
+            params: {a_min: -1024, a_max: 3000, b_min: 0, b_max: 1, clip: True}
+            maskfill: -1024
+postprocessing_config:
+    t1: null
+    t2: null
+train_opt:
+    cv: 4
+    patch_size: [96,96,96]
+    num_patch: 3
+    batch_size: 1
+    max_epoch: 1000
+    step_size: 100
+    val_iter: 50
+    source_key: mr
+    target_key: ct
+    max_num_val: 5
+    monitor_metrics: psnr
+trainer_opt:
+    type: srgan
+network_opt:
+    net_g:
+        type: attentiondenseunet
+        params: 
+            spatial_dims: 3
+            in_channels: 1
+            out_channels: 1
+            base_channels: 16
+            deep_supervision: True
+            multires_input: True
+            act: ['leakyrelu', {'negative_slope': 0.2, 'inplace': True}]
+            upsample_mode: nearest
+            downsample_mode: nearest
+            last_pixelshuffle: False
+    net_d:
+        type: simpleunet
+        params:
+            spatial_dims: 3
+            in_channels: 1
+            out_channels: 1
+            base_channels: 8
+            deep_supervision: True
+            multires_input: True
+            act: ['leakyrelu', {'negative_slope': 0.2, 'inplace': True}]
+            upsample_mode: nearest
+            downsample_mode: nearest
+optim_opt:
+    generator:
+        type: adam
+        params:
+            lr: !!float 1e-4
+    discriminator:
+        type: adam
+        params:
+            lr: !!float 1e-4
+scheduler_opt:
+    generator: 
+        type: multisteplr
+        params:
+            milestones: [200,400,600,800]
+            gamma: 0.5
+    discriminator:
+        type: multisteplr
+        params:
+            milestones: [200,400,600,800]
+            gamma: 0.5
+loss_opt:
+    generator:
+        pixel_loss:
+            params: {loss_type: l1}
+            weight: 1
+            weight_by_level: {level_0: 1, level_1: 1, level_2: 1, level_3: 1}
+        perception_loss:
+            type: 3d
+            params:
+                model_name: vgg19
+                return_nodes: [features.35]
+                channel_dim: 3
+                spatial_dims: 3
+                separate_channel: True
+            weight: 1
+        adv_loss:
+            params: {loss_type: bce, relativistic: True}
+            weight: 0.0001
+            weight_by_level: {level_0: 1, level_1: 1, level_2: 1, level_3: 1}
+    discriminator:
+        disc_loss:
+            params: {loss_type: bce, relativistic: True}
+            weight_by_level: {level_0: 1, level_1: 1, level_2: 1, level_3: 1}
+scaler_opt:
+    use_scaler: True
+    generator: {}
+    discriminator: {}
+autocast:
+    enabled: True
+    precision: float16
