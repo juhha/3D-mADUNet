@@ -1,0 +1,21 @@
+name: 3dmadunet
+channels:
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.10.13
+  - pip=23.3.1
+  - pytorch=2.3.1
+  - torchvision=0.18.1
+  - scipy
+  - pip:
+    - monai==1.3.0
+    - numpy==1.26.3
+    - pillow==10.2.0
+    - nibabel==5.2.0
+    - MedPy==0.4.0
+    - tqdm==4.66.1
+    - PyYAML
+    - matplotlib==3.8.2
+    - wandb==0.16.3
+
