@@ -13,6 +13,27 @@ For training with the same dataset, you should download the dataset first (links
 
 For training with the custom dataset, you should match the file paths in meta json file stored in `data/meta`.
 
+## Installation
+
+Python 3.11 is recommended for the pinned dependencies. Pillow 13.0.0 fixes known
+security vulnerabilities in earlier releases and requires Python 3.11 or newer.
+
+Create the Conda environment with:
+
+```bash
+conda env create -f environment.yml
+conda activate 3dmadunet
+```
+
+Alternatively, in a Python 3.11 virtual environment, install the dependencies with:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Existing Python 3.10 environments need to be recreated with Python 3.11 before
+installing the updated dependencies.
+
 ## Data Preparation
 For data I/O, the list of files should be saved as json meta file located in `data/meta` folder. See `data/meta/brats21.json` as reference.
 
