@@ -77,7 +77,7 @@ class SRGANTrainer(BaseTrainer):
         ##########
         # load from checkpoint
         if os.path.exists(os.path.join(self.cp_dir, 'latest.pt')):
-            state_dict = torch.load(os.path.join(self.cp_dir, 'latest.pt'), map_location = self.device)
+            state_dict = torch.load(os.path.join(self.cp_dir, 'latest.pt'), map_location = self.device, weights_only = True)
             self.net_g.load_state_dict(state_dict['net_g'])
             self.net_d.load_state_dict(state_dict['net_d'])
             self.optimizer_g.load_state_dict(state_dict['optimizer_g'])

@@ -34,6 +34,16 @@ python -m pip install -r requirements.txt
 Existing Python 3.10 environments need to be recreated with Python 3.11 before
 installing the updated dependencies.
 
+Both installation methods use the versions in `requirements.txt`, including
+PyTorch 2.13.0, torchvision 0.28.0, MONAI 1.6.1, and tqdm 4.66.3 to address known
+dependency vulnerabilities. PyTorch is installed with pip because official
+Conda packages are no longer published for current PyTorch releases.
+
+For a specific CUDA version or a CPU-only installation, install the matching
+PyTorch and torchvision wheels from the
+[official PyTorch instructions](https://pytorch.org/get-started/previous-versions/#v2130)
+before installing `requirements.txt`. Keep the pinned versions together.
+
 ## Data Preparation
 For data I/O, the list of files should be saved as json meta file located in `data/meta` folder. See `data/meta/brats21.json` as reference.
 
